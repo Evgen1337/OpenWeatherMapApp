@@ -42,6 +42,7 @@ namespace OpenWeatherMapApp
             sb.AppendLine("____________________");
 
             var report = sb.ToString();
+            sb.Clear();
 
             return report;
         }
