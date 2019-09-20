@@ -18,15 +18,22 @@ namespace OpenWeatherMapApp
 
         static void Main(string[] args)
         {
-            try
+            while (true)
             {
-                Logger.Info("sdf");
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Logger.Fatal(ex);
-                Console.WriteLine(ex.Message);
+                try
+                {
+                    Run();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Fatal(ex);
+                    Console.WriteLine(ex.Message);
+                }
+
+                Console.WriteLine("Check new city?(yes: key \"y\" / no: any key)");
+                var continuieResponce = Console.ReadLine();
+                if (continuieResponce != "y")
+                    break;
             }
 
         }
@@ -36,37 +43,29 @@ namespace OpenWeatherMapApp
             var httpClient = new HttpClient();
             var dataRepository = new DataRepository(httpClient, ApiKey);
 
-            while (true)
+
+            Console.WriteLine("Please enter city in eng lang");
+            var city = Console.ReadLine();
+
+            if (city == string.Empty || string.IsNullOrWhiteSpace(city))
             {
-                Console.WriteLine("Please enter city in eng lang");
-                var city = Console.ReadLine();
+                Console.WriteLine("Please write city");
+            }
 
-                if (city == string.Empty || string.IsNullOrWhiteSpace(city))
-                {
-                    Console.WriteLine("Please write city");
-                    continue;
-                }
+            var weahter = dataRepository.GetWeahter(city);
+            var dataToInsert = TextGenerator.GenerateWeahterText(weahter);
+            Console.WriteLine(dataToInsert);
 
-                var weahter = dataRepository.GetWeahter(city);
-                var dataToInsert = TextGenerator.GenerateWeahterText(weahter);
-                Console.WriteLine(dataToInsert);
+            Console.WriteLine("Save info at txt file?(yes: key \"y\" / no: any key)");
+            var saveResponce = Console.ReadLine();
+            if (saveResponce == "y")
+            {
+                Directory.CreateDirectory("data");
 
-                Console.WriteLine("Save info at txt file?(yes: key \"y\" / no: any key)");
-                var saveResponce = Console.ReadLine();
-                if (saveResponce == "y")
-                {
-                    Directory.CreateDirectory("data");
+                var reportText = TextGenerator.GenerateReportText(weahter);
+                File.AppendAllLines("data/reports.txt", new[] { reportText });
 
-                    var reportText = TextGenerator.GenerateReportText(weahter);
-                    File.AppendAllLines("data/reports.txt", new[] { reportText });
-
-                    Console.WriteLine("Report save sucsses");
-                }
-
-                Console.WriteLine("Check new wehter?(yes: key \"y\" / no: any key)");
-                var continuieResponce = Console.ReadLine();
-                if (continuieResponce != "y")
-                    break;
+                Console.WriteLine("Report save sucsses");
             }
         }
     }
