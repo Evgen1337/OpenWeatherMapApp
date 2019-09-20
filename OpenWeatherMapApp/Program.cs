@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -10,16 +11,21 @@ namespace OpenWeatherMapApp
 {
     class Program
     {
-        static readonly string ApiKey = ConfigurationManager.AppSettings[nameof(ApiKey)];
+        private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
+
+        private static readonly string ApiKey = ConfigurationManager.AppSettings[nameof(ApiKey)];
+
 
         static void Main(string[] args)
         {
             try
             {
+                Logger.Info("sdf");
                 Run();
             }
             catch (Exception ex)
             {
+                Logger.Fatal(ex);
                 Console.WriteLine(ex.Message);
             }
 
