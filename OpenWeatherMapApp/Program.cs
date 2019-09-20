@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -9,6 +10,8 @@ namespace OpenWeatherMapApp
 {
     class Program
     {
+        static readonly string ApiKey = ConfigurationManager.AppSettings[nameof(ApiKey)];
+
         static void Main(string[] args)
         {
             try
@@ -25,7 +28,7 @@ namespace OpenWeatherMapApp
         private static void Run()
         {
             var httpClient = new HttpClient();
-            var dataRepository = new DataRepository(httpClient);
+            var dataRepository = new DataRepository(httpClient, ApiKey);
 
             while (true)
             {

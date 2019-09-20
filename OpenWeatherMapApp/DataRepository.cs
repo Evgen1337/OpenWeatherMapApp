@@ -9,17 +9,19 @@ namespace OpenWeatherMapApp
     public class DataRepository
     {
         private readonly HttpClient _httpClient;
+        private readonly string _apiKey;
 
-        public DataRepository(HttpClient httpClient)
+        public DataRepository(HttpClient httpClient, string apiKey)
         {
             _httpClient = httpClient;
+            _apiKey = apiKey;
         }
 
         public WeatherModel GetWeahter(string city) => GetWeahterAsync(city).GetAwaiter().GetResult();
 
         private async Task<string> GetWeahterJsonAsync(string city)
         {
-            var responce = await _httpClient.GetAsync(string.Format("http://api.openweathermap.org/data/2.5/weather?appid=5f9d8a8b65c4a8651d769c34038a55f3&q={0}&lang=ru&units=metric", city));
+            var responce = await _httpClient.GetAsync(string.Format("http://api.openweathermap.org/data/2.5/weather?appid={0}&q={1}&lang=ru&units=metric", _apiKey, city));
             responce.EnsureSuccessStatusCode();
 
             var json = await responce.Content.ReadAsStringAsync();
