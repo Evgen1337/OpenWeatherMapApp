@@ -21,7 +21,7 @@ namespace OpenWeatherMapApp
 
         private async Task<string> GetWeahterJsonAsync(string city)
         {
-            var responce = await _httpClient.GetAsync(string.Format("http://api.openweathermap.org/data/2.5/weather?appid={0}&q={1}&lang=ru&units=metric", _apiKey, city));
+            var responce = await _httpClient.GetAsync(string.Format("http://api.openweathermap.org/data/2.5/weather?appid={0}&q={1}&units=metric", _apiKey, city));
             responce.EnsureSuccessStatusCode();
 
             var json = await responce.Content.ReadAsStringAsync();
